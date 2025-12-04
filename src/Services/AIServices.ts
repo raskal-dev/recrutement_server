@@ -17,7 +17,7 @@ interface ChatRequest {
 
 export const chatWithAI = async (request: ChatRequest) => {
     try {
-        const response = await axios.post(`${AI_SERVICE_URL}/chat`, request, {
+        const response = await axios.post(`${AI_SERVICE_URL}/ai/chat`, request, {
             timeout: 30000,
         });
         return response.data;
@@ -35,7 +35,7 @@ export const chatWithAI = async (request: ChatRequest) => {
 export const analyzeCV = async (cvText: string, jobDescription?: string) => {
     try {
         const response = await axios.post(
-            `${AI_SERVICE_URL}/analyze-cv`,
+            `${AI_SERVICE_URL}/ai/analyze-cv`,
             {
                 cv_text: cvText,
                 job_description: jobDescription,
@@ -64,7 +64,7 @@ export const generateJobDescription = async (
 ) => {
     try {
         const response = await axios.post(
-            `${AI_SERVICE_URL}/generate-job-description`,
+            `${AI_SERVICE_URL}/ai/generate-job-description`,
             {
                 title,
                 company,
