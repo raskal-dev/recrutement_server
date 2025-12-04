@@ -71,7 +71,10 @@ app.post('/alert', (req: Request, res: Response) => {
 
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
-app.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'API Documentation - Recrutement',
+}));
 
 // Start the server
 app.listen(port, () => {
