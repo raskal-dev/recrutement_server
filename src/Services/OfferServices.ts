@@ -16,7 +16,7 @@ export const getOffers = async () => {
     });
 };
 
-export const getOffer = async (id: number) => {
+export const getOffer = async (id: string) => {
     const existingOffer = await Offer.findByPk(id);
     if (!existingOffer) {
         throw new BaseError("Offre non trouvée", 404);
@@ -36,7 +36,7 @@ export const createOffer = async (offer: IOffer) => {
     return await Offer.create(offer);
 };
 
-export const updateOffer = async (id: number, offer: IOffer) => {
+export const updateOffer = async (id: string, offer: IOffer) => {
     const existingOffer = await Offer.findByPk(id);
     if (!existingOffer) {
         logger.error("Offer not found", 404);
@@ -48,7 +48,7 @@ export const updateOffer = async (id: number, offer: IOffer) => {
     return await Offer.findByPk(id);
 };
 
-export const deleteOffer = async (id: number) => {
+export const deleteOffer = async (id: string) => {
     const existingOffer = await Offer.findByPk(id);
     if (!existingOffer) {
         throw new BaseError("Offre non trouvée", 404);

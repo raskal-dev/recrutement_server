@@ -19,8 +19,9 @@ export const getOffersController = async (req: Request, res: Response) => {
 
 export const getOfferController = async (req: Request, res: Response) => {
     try {
-        const offerId = parseInt(req.params.offerId);
-        if (isNaN(offerId)) {
+        const offerId = req.params.offerId;
+
+        if (!offerId) {
             return SendError(res, "ID invalide", 400);
         }
 
@@ -63,8 +64,8 @@ export const createOfferController = async (req: Request, res: Response) => {
 
 export const updateOfferController = async (req: Request, res: Response) => {
     try {
-        const offerId = parseInt(req.params.offerId);
-        if (isNaN(offerId)) {
+        const offerId = req.params.offerId;
+        if (!offerId) {
             return SendError(res, "ID invalide", 400);
         }
 
@@ -85,8 +86,8 @@ export const updateOfferController = async (req: Request, res: Response) => {
 
 export const deleteOfferController = async (req: Request, res: Response) => {
     try {
-        const offerId = parseInt(req.params.offerId);
-        if (isNaN(offerId)) {
+        const offerId = req.params.offerId;
+        if (!offerId) {
             return SendError(res, "ID invalide", 400);
         }
 
