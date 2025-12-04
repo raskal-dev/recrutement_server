@@ -7,6 +7,7 @@ import UserCompetence from "./UserCompetence";
 import moment from "moment";
 import baselogger from "../Configs/Logger.config";
 import Experience from "./Experience";
+import Application from "./Application";
 // import CompetencesSeeder from "../Seeders/CompetencesSeeder";
 
 
@@ -37,6 +38,7 @@ db.offers = Offer(sequelize);
 db.competences = Competence(sequelize)
 db.userCompetences = UserCompetence(sequelize);
 db.experiences = Experience(sequelize);
+db.applications = Application(sequelize);
 
 /**
  * Define the R E L A T I O N S H I P S
@@ -47,6 +49,10 @@ db.users.belongsToMany(db.competences, { through: 'UserCompetences' });
 db.competences.belongsToMany(db.users, { through: 'UserCompetences' });
 db.users.hasMany(db.experiences);
 db.experiences.belongsTo(db.users);
+db.users.hasMany(db.applications);
+db.applications.belongsTo(db.users);
+db.offers.hasMany(db.applications);
+db.applications.belongsTo(db.offers);
 
 const ConnectionDb = async () => {
   const formattedTime = moment().format('HH:mm:ss');

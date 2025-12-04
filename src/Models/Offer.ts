@@ -4,6 +4,11 @@ const Offer = (sequelize: Sequelize) => {
     return sequelize.define(
         'Offer',
         {
+            id: {
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
+                primaryKey: true,
+            },
             title: {
                 type: DataTypes.STRING(80),
                 allowNull: false,
@@ -23,6 +28,14 @@ const Offer = (sequelize: Sequelize) => {
             contract: {
                 type: DataTypes.STRING,
                 allowNull: false,
+            },
+            UserId: {
+                type: DataTypes.UUID,
+                allowNull: false,
+                references: {
+                    model: 'users',
+                    key: 'id',
+                },
             }
         }, {
             timestamps: true,
