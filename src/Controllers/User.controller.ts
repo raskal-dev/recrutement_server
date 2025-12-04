@@ -126,7 +126,11 @@ export const deleteUserController = async (req: Request, res: Response, next: Ne
 export const loginController = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await login(req);
-        SendResponse(res, result, "Connexion réussie");
+        // Structure de réponse sécurisée : seulement les données nécessaires
+        SendResponse(res, {
+            user: result.user,
+            token: result.token
+        }, "Connexion réussie");
     } catch (err: any) {
         if (err instanceof BaseError) {
             return SendError(res, err.message, err.statusCode);
