@@ -5,7 +5,7 @@ const UserCompetence = (sequelize: Sequelize) => {
         'UserCompetence',
         {
             userId: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.UUID,
                 allowNull: false,
                 references: {
                     model: 'Users',

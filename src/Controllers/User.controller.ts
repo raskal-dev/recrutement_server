@@ -61,10 +61,7 @@ export const getUsersController = async(req: Request, res: Response, next: NextF
 
 export const getUserController = async(req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = parseInt(req.params.userId);
-        if (isNaN(userId)) {
-            return SendError(res, "ID invalide", 400);
-        }
+        const userId = req.params.userId;
 
         const user = await getUser(userId);
         SendResponse(res, user, "Utilisateur trouvé");
@@ -94,10 +91,7 @@ export const createUserController = async(req: Request, res: Response, next: Nex
 
 export const updateUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = parseInt(req.params.userId); // Extraire l'ID depuis l'URL
-        if (isNaN(userId)) {
-            return SendError(res, "ID invalide", 400);
-        }
+        const userId = req.params.userId; // UUID depuis l'URL
 
         if (req.body.password) {
             req.body.password = await bcrypt.hash(req.body.password, 10);
@@ -116,10 +110,7 @@ export const updateUserController = async (req: Request, res: Response, next: Ne
 
 export const deleteUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = parseInt(req.params.userId);
-        if (isNaN(userId)) {
-            return SendError(res, "ID invalide", 400);
-        }
+        const userId = req.params.userId;
 
         const result = await deleteUser(userId);
         SendResponse(res, result, "Suppression de l'utilisateur réussie");
