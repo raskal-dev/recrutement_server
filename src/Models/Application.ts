@@ -37,6 +37,7 @@ const Application = (sequelize: Sequelize) => {
         },
         {
             timestamps: true,
+            tableName: 'applications',
             indexes: [
                 {
                     unique: true,

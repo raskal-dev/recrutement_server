@@ -39,6 +39,7 @@ const Offer = (sequelize: Sequelize) => {
             }
         }, {
             timestamps: true,
+            tableName: 'offers',
         }
     );
 }

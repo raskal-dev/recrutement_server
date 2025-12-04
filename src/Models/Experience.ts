@@ -22,6 +22,7 @@ const Experience = (sequelize: Sequelize) => {
             }
         }, {
             timestamps: true,
+            tableName: 'experiences',
         }
     );
 }

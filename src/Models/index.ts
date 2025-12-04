@@ -45,8 +45,8 @@ db.applications = Application(sequelize);
  */
 db.users.hasMany(db.offers);
 db.offers.belongsTo(db.users);
-db.users.belongsToMany(db.competences, { through: 'UserCompetences' });
-db.competences.belongsToMany(db.users, { through: 'UserCompetences' });
+db.users.belongsToMany(db.competences, { through: 'usercompetences' });
+db.competences.belongsToMany(db.users, { through: 'usercompetences' });
 db.users.hasMany(db.experiences);
 db.experiences.belongsTo(db.users);
 db.users.hasMany(db.applications);

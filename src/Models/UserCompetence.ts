@@ -8,7 +8,7 @@ const UserCompetence = (sequelize: Sequelize) => {
                 type: DataTypes.UUID,
                 allowNull: false,
                 references: {
-                    model: 'Users',
+                    model: 'users',
                     key: 'id'
                 }
             },
@@ -16,13 +16,14 @@ const UserCompetence = (sequelize: Sequelize) => {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'Competences',
+                    model: 'competences',
                     key: 'id'
                 }
             }
         }, 
         {
             timestamps: true,
+            tableName: 'usercompetences',
         }
     );
 };

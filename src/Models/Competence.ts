@@ -10,6 +10,7 @@ const Competence = (sequelize: Sequelize) => {
             }
         }, {
             timestamps: true,
+            tableName: 'competences',
         }
     );
 }
