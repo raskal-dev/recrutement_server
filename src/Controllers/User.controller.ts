@@ -26,7 +26,7 @@ export const getProfileController = async(req: Request, res: Response, next: Nex
 
 export const addCompetenceToUserController = async(req: Request, res: Response, next: NextFunction) => {
     try {
-        const competenceIds = req.body.competenceIds as number[];
+        const competenceIds = req.body.competenceIds as string[];
 
         // @ts-expect-error Property 'auth' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
         const userId = await req.auth.user.id;

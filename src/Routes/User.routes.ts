@@ -248,8 +248,9 @@ userRouter.post('/login', loginController);
  *               competenceIds:
  *                 type: array
  *                 items:
- *                   type: integer
- *                 example: [1, 2, 3]
+ *                   type: string
+ *                   format: uuid
+ *                 example: ["a9607a7c-fc56-4215-afbb-6e3d4108c70b", "b24ccbd2-15f0-4132-ad7d-d871fca2dd25"]
  *     responses:
  *       200:
  *         description: Compétences ajoutées avec succès

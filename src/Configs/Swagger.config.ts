@@ -155,6 +155,34 @@ const swaggerOptions: Options = {
             },
           },
         },
+        Competence: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID unique de la compétence',
+            },
+            name: {
+              type: 'string',
+              description: 'Nom de la compétence',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+          },
+          example: {
+            id: 'c3d4e5f6-7890-1234-5678-90abcdef1234',
+            name: 'React.js',
+            createdAt: '2025-12-04T15:19:37.778Z',
+            updatedAt: '2025-12-04T15:32:49.963Z',
+          },
+        },
         Error: {
           type: 'object',
           properties: {

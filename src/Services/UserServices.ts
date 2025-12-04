@@ -28,7 +28,7 @@ export const getProfile = async (id: string) => {
     });
 };
 
-export const addCompetenceToUser = async (userId: string, competenceIds: number[]) => {
+export const addCompetenceToUser = async (userId: string, competenceIds: string[]) => {
     const user = await User.findByPk(userId);
     if (!user) {
         throw new BaseError("Utilisateur non trouvé", 404);
