@@ -1,14 +1,11 @@
-import express, { Request, Response , Application } from 'express';
-import dotenv from 'dotenv';
-import { ConnectionDb } from './src/Models';
-import userRouter from './src/Routes/User.routes';
 import bodyParser from 'body-parser';
-import offerRouter from './src/Routes/Offer.routes';
-import competenceRouter from './src/Routes/Competence.routes';
+import dotenv from 'dotenv';
+import express, { Application, Request, Response } from 'express';
 import baseLogger from 'morgan';
+import client from 'prom-client';
 import logger from './src/Configs/Logger.config';
 import metricsRouter from './src/metrics';
-import client from 'prom-client';
+import { ConnectionDb } from './src/Models';
 // import moment from 'moment';
 
 //For env File 
@@ -27,10 +24,10 @@ ConnectionDb();
 /**
  * Call The Router
  */
-const groupEndpoint = '/api';
-app.use(`${groupEndpoint}/users`, userRouter);
-app.use(`${groupEndpoint}/offers`, offerRouter);
-app.use(`${groupEndpoint}/competences`, competenceRouter);
+// const groupEndpoint = '/api';
+// app.use(`${groupEndpoint}/users`, userRouter);
+// app.use(`${groupEndpoint}/offers`, offerRouter);
+// app.use(`${groupEndpoint}/competences`, competenceRouter);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Express & TypeScript Server');
