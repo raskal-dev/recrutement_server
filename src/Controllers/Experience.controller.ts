@@ -69,11 +69,35 @@ export const createExperienceController = async (req: Request, res: Response) =>
             return SendError(res, "Utilisateur non trouvé", 404);
         }
 
+        // Validation des dates
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const startDate = new Date(req.body.startDate);
+        startDate.setHours(0, 0, 0, 0);
+        
+        const endDate = new Date(req.body.endDate);
+        endDate.setHours(0, 0, 0, 0);
+
+        // Vérifier que les dates ne sont pas dans le futur
+        if (startDate > today) {
+            return SendError(res, "La date de début ne peut pas être dans le futur", 400);
+        }
+
+        if (endDate > today) {
+            return SendError(res, "La date de fin ne peut pas être dans le futur", 400);
+        }
+
+        // Vérifier que la date de fin est après la date de début
+        if (endDate < startDate) {
+            return SendError(res, "La date de fin doit être après la date de début", 400);
+        }
+
         const dataExperience: IExperience = { 
             ...req.body, 
             UserId: user.id,
-            startDate: new Date(req.body.startDate),
-            endDate: new Date(req.body.endDate)
+            startDate: startDate,
+            endDate: endDate
         };
         const experience = await createExperience(dataExperience);
         SendResponse(res, experience, "Expérience ajoutée avec succès!");
@@ -100,12 +124,42 @@ export const updateExperienceController = async (req: Request, res: Response) =>
             return SendError(res, "ID invalide", 400);
         }
 
+        // Validation des dates si elles sont présentes
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
         const updateData: Partial<IExperience> = { ...req.body };
+        
         if (updateData.startDate) {
-            updateData.startDate = new Date(updateData.startDate as string);
+            const startDate = new Date(updateData.startDate as string);
+            startDate.setHours(0, 0, 0, 0);
+            
+            if (startDate > today) {
+                return SendError(res, "La date de début ne peut pas être dans le futur", 400);
+            }
+            
+            updateData.startDate = startDate;
         }
+        
         if (updateData.endDate) {
-            updateData.endDate = new Date(updateData.endDate as string);
+            const endDate = new Date(updateData.endDate as string);
+            endDate.setHours(0, 0, 0, 0);
+            
+            if (endDate > today) {
+                return SendError(res, "La date de fin ne peut pas être dans le futur", 400);
+            }
+            
+            updateData.endDate = endDate;
+        }
+
+        // Vérifier que la date de fin est après la date de début si les deux sont présentes
+        if (updateData.startDate && updateData.endDate) {
+            const startDate = new Date(updateData.startDate as Date);
+            const endDate = new Date(updateData.endDate as Date);
+            
+            if (endDate < startDate) {
+                return SendError(res, "La date de fin doit être après la date de début", 400);
+            }
         }
 
         const experience = await updateExperience(experienceId, user.id, updateData);
