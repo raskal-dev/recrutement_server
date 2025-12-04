@@ -44,8 +44,8 @@ export const getExperiencesByUserController = async (req: Request, res: Response
 
 export const getExperienceController = async (req: Request, res: Response) => {
     try {
-        const experienceId = parseInt(req.params.experienceId);
-        if (isNaN(experienceId)) {
+        const experienceId = req.params.experienceId;
+        if (!experienceId) {
             return SendError(res, "ID invalide", 400);
         }
 
@@ -95,17 +95,17 @@ export const updateExperienceController = async (req: Request, res: Response) =>
             return SendError(res, "Utilisateur non trouvé", 404);
         }
 
-        const experienceId = parseInt(req.params.experienceId);
-        if (isNaN(experienceId)) {
+        const experienceId = req.params.experienceId;
+        if (!experienceId) {
             return SendError(res, "ID invalide", 400);
         }
 
         const updateData: Partial<IExperience> = { ...req.body };
         if (updateData.startDate) {
-            updateData.startDate = new Date(updateData.startDate);
+            updateData.startDate = new Date(updateData.startDate as string);
         }
         if (updateData.endDate) {
-            updateData.endDate = new Date(updateData.endDate);
+            updateData.endDate = new Date(updateData.endDate as string);
         }
 
         const experience = await updateExperience(experienceId, user.id, updateData);
@@ -128,8 +128,8 @@ export const deleteExperienceController = async (req: Request, res: Response) =>
             return SendError(res, "Utilisateur non trouvé", 404);
         }
 
-        const experienceId = parseInt(req.params.experienceId);
-        if (isNaN(experienceId)) {
+        const experienceId = req.params.experienceId;
+        if (!experienceId) {
             return SendError(res, "ID invalide", 400);
         }
 

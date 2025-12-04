@@ -17,7 +17,7 @@ export const getExperiencesByUser = async (userId: string) => {
     });
 };
 
-export const getExperience = async (id: number) => {
+export const getExperience = async (id: string) => {
     const existingExperience = await Experience.findByPk(id);
     if (!existingExperience) {
         throw new BaseError("Experience not found", 404);
@@ -30,7 +30,7 @@ export const createExperience = async (experience: IExperience) => {
     return await Experience.create(experience);
 };
 
-export const updateExperience = async (id: number, userId: string, experience: Partial<IExperience>) => {
+export const updateExperience = async (id: string, userId: string, experience: Partial<IExperience>) => {
     const existingExperience = await Experience.findOne({
         where: { id, UserId: userId }
     });
@@ -43,7 +43,7 @@ export const updateExperience = async (id: number, userId: string, experience: P
     return await Experience.findByPk(id);
 };
 
-export const deleteExperience = async (id: number, userId: string) => {
+export const deleteExperience = async (id: string, userId: string) => {
     const existingExperience = await Experience.findOne({
         where: { id, UserId: userId }
     });
