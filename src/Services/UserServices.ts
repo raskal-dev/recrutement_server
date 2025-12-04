@@ -8,14 +8,23 @@ import logger from "../Configs/Logger.config";
 
 const User = db.users as any;
 const Competence = db.competences as any;
+const Experience = db.experiences as any;
 
 export const getProfile = async (id: string) => {
     return await User.findByPk(id, {
         attributes: ['id', 'name', 'email', 'about', 'adress', 'role', 'createdAt', 'updatedAt'],
-        include: {
-            model: Competence,
-            attributes: ['id', 'name']
-        }
+        include: [
+            {
+                model: Competence,
+                attributes: ['id', 'name'],
+                through: { attributes: [] }
+            },
+            {
+                model: Experience,
+                attributes: ['id', 'title', 'description', 'startDate', 'endDate', 'createdAt', 'updatedAt'],
+                order: [['startDate', 'DESC']]
+            }
+        ]
     });
 };
 
