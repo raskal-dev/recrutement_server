@@ -39,7 +39,7 @@ export const createOffer = async (offer: IOffer) => {
 export const updateOffer = async (id: string, offer: IOffer) => {
     const existingOffer = await Offer.findByPk(id);
     if (!existingOffer) {
-        logger.error("Offer not found", 404);
+        logger.error("Offer not found");
         throw new BaseError("Offre non trouvée", 404);
     }
 

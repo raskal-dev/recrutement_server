@@ -7,7 +7,7 @@ import { IExperience } from "../Utils/Interface/IExperience";
 export const getExperiencesController = async (req: Request, res: Response) => {
     try {
         // @ts-expect-error Property 'auth' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
-        const user = await req.auth?.user;
+        const user = req.auth?.user;
         
         // Si un utilisateur est authentifié, récupérer ses expériences, sinon toutes
         const experiences = user 
