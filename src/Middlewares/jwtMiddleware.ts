@@ -32,7 +32,14 @@ export const jwtMiddleware = ( roles: Role[] ) => {
             };
             return next();
         } catch (error: any) {
-            return SendError(res, error.message, 401);
+            // Token expiré ou invalide
+            if (error.name === 'TokenExpiredError') {
+                return SendError(res, 'Token expiré. Veuillez vous reconnecter.', 401);
+            }
+            if (error.name === 'JsonWebTokenError') {
+                return SendError(res, 'Token invalide. Veuillez vous reconnecter.', 401);
+            }
+            return SendError(res, error.message || 'Erreur d\'authentification', 401);
         }
     }
 };
