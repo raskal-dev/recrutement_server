@@ -132,3 +132,25 @@ export const getApplication = async (applicationId: string) => {
     return application;
 };
 
+export const getAllApplications = async () => {
+    return await Application.findAll({
+        include: [
+            {
+                model: User,
+                attributes: ["id", "name", "email", "about", "adress", "role"],
+            },
+            {
+                model: Offer,
+                attributes: ["id", "title", "description", "salary", "localisation", "contract"],
+                include: [
+                    {
+                        model: User,
+                        attributes: ["id", "name", "email"],
+                    },
+                ],
+            },
+        ],
+        order: [["createdAt", "DESC"]],
+    });
+};
+

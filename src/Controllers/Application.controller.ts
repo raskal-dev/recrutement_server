@@ -5,6 +5,7 @@ import {
     getApplicationsByUser,
     updateApplicationStatus,
     getApplication,
+    getAllApplications,
 } from "../Services/ApplicationServices";
 import { SendError, SendResponse } from "../Middlewares/SendResponse.middleware";
 import { BaseError } from "../Utils/BaseErrer";
@@ -116,6 +117,19 @@ export const getApplicationController = async (req: Request, res: Response) => {
 
         const application = await getApplication(applicationId);
         SendResponse(res, application, "Candidature trouvée");
+    } catch (err: any) {
+        if (err instanceof BaseError) {
+            return SendError(res, err.message, err.statusCode);
+        }
+
+        return SendError(res, err.message, 500);
+    }
+};
+
+export const getAllApplicationsController = async (req: Request, res: Response) => {
+    try {
+        const applications = await getAllApplications();
+        SendResponse(res, applications, "Liste de toutes les candidatures");
     } catch (err: any) {
         if (err instanceof BaseError) {
             return SendError(res, err.message, err.statusCode);

@@ -5,6 +5,7 @@ import {
     getApplicationsByUserController,
     updateApplicationStatusController,
     getApplicationController,
+    getAllApplicationsController,
 } from "../Controllers/Application.controller";
 import { jwtMiddleware } from "../Middlewares/jwtMiddleware";
 import { Role } from "../Utils/Enums/Role.enum";
@@ -99,6 +100,29 @@ applicationRouter.get("/offer/:offerId", jwtMiddleware(roleEntreprise), getAppli
  *                     $ref: '#/components/schemas/Application'
  */
 applicationRouter.get("/user", jwtMiddleware(roleStudent), getApplicationsByUserController);
+
+/**
+ * @swagger
+ * /applications/all:
+ *   get:
+ *     summary: Récupère toutes les candidatures (admin uniquement)
+ *     tags: [Applications]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Liste de toutes les candidatures récupérée avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Application'
+ */
+applicationRouter.get("/all", jwtMiddleware([Role.ADMIN]), getAllApplicationsController);
 
 /**
  * @swagger
