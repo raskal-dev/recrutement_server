@@ -22,7 +22,8 @@ export const jwtMiddleware = ( roles: Role[] ) => {
             if (!user) {
                 return SendError(res, 'Utilisateur non trouvé', 404);
             }
-            if (!roles.includes(user.role)) {
+            // L'admin a accès à toutes les routes
+            if (user.role !== Role.ADMIN && !roles.includes(user.role)) {
                 return SendError(res, 'Vous n\'êtes pas autorisé à effectuer cette action.', 403);
             }
             // @ts-expect-error Property 'auth' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
