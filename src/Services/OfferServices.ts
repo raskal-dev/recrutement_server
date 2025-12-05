@@ -48,6 +48,19 @@ export const updateOffer = async (id: string, offer: IOffer) => {
     return await Offer.findByPk(id);
 };
 
+export const getOffersByUser = async (userId: string) => {
+    return await Offer.findAll({
+        where: { UserId: userId },
+        include: [
+            {
+                model: db.users,
+                attributes: ["id", "name", "email", "about", "adress", "role"],
+            },
+        ],
+        order: [["createdAt", "DESC"]],
+    });
+};
+
 export const deleteOffer = async (id: string) => {
     const existingOffer = await Offer.findByPk(id);
     if (!existingOffer) {

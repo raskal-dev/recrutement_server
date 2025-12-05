@@ -6,7 +6,8 @@
     "dev": "ts-node-dev --respawn --transpile-only main.ts",
     "start": "nodemon main.ts",
     "lint": "eslint ./src --ext .ts",
-    "test": "jest"
+    "test": "jest",
+    "seed": "ts-node-dev --transpile-only src/Seeders/runSeeder.ts"
   },
   "author": "",
   "license": "ISC",

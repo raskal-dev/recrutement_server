@@ -13,7 +13,7 @@ import { IApplication } from "../Utils/Interface/IApplication";
 export const createApplicationController = async (req: Request, res: Response) => {
     try {
         // @ts-expect-error Property 'auth' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
-        const user = await req.auth.user;
+        const user = req.auth.user;
 
         if (!user) {
             return SendError(res, "Utilisateur non trouvé", 404);
@@ -65,7 +65,7 @@ export const getApplicationsByOfferController = async (req: Request, res: Respon
 export const getApplicationsByUserController = async (req: Request, res: Response) => {
     try {
         // @ts-expect-error Property 'auth' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
-        const user = await req.auth.user;
+        const user = req.auth.user;
 
         if (!user) {
             return SendError(res, "Utilisateur non trouvé", 404);
