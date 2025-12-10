@@ -60,8 +60,9 @@ export const createOfferController = async (req: Request, res: Response) => {
         // }
 
         const dataOffer: IOffer = {...req.body, UserId: user.id};
+        const competenceIds = req.body.competenceIds || [];
 
-        const offer = await createOffer(dataOffer);
+        const offer = await createOffer(dataOffer, competenceIds);
         SendResponse(res, offer, "Offre ajouté avec succes!");
     } catch (err: any) {
         if (err instanceof BaseError) {

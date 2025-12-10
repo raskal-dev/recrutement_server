@@ -4,6 +4,7 @@ import { BaseError } from "../Utils/BaseErrer";
 import { IOffer } from "../Utils/Interface/IOffer";
 
 const Offer = db.offers as any;
+const Competence = db.competences as any;
 
 export const getOffers = async () => {
     return await Offer.findAll({
@@ -12,6 +13,12 @@ export const getOffers = async () => {
                 model: db.users,
                 attributes: ["id", "name", "email", "about", "adress", "role"],
             },
+            {
+                model: Competence,
+                as: 'Competences',
+                attributes: ['id', 'name'],
+                through: { attributes: [] }
+            }
         ],
     });
 };
@@ -32,8 +39,28 @@ export const getOffer = async (id: string) => {
     });
 };
 
-export const createOffer = async (offer: IOffer) => {
-    return await Offer.create(offer);
+export const createOffer = async (offer: IOffer, competenceIds?: string[]) => {
+    const newOffer = await Offer.create(offer);
+    
+    // Ajouter les compétences si fournies
+    if (competenceIds && competenceIds.length > 0) {
+        await newOffer.setCompetences(competenceIds);
+    }
+    
+    return await Offer.findByPk(newOffer.id, {
+        include: [
+            {
+                model: db.users,
+                attributes: ["id", "name", "email", "about", "adress", "role"],
+            },
+            {
+                model: Competence,
+                as: 'Competences',
+                attributes: ['id', 'name'],
+                through: { attributes: [] }
+            }
+        ],
+    });
 };
 
 export const updateOffer = async (id: string, offer: IOffer) => {
