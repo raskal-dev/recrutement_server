@@ -100,3 +100,35 @@ export const generateJobDescription = async (
     }
 };
 
+export const extractTextFromFile = async (file: Express.Multer.File) => {
+    try {
+        const FormData = require('form-data');
+        const formData = new FormData();
+        formData.append('file', file.buffer, {
+            filename: file.originalname,
+            contentType: file.mimetype,
+        });
+
+        const response = await axios.post(
+            `${AI_SERVICE_URL}/ai/extract-text`,
+            formData,
+            {
+                timeout: 60000, // 60 secondes pour l'extraction
+                headers: {
+                    ...getHeaders(),
+                    ...formData.getHeaders(),
+                },
+            }
+        );
+        return response.data;
+    } catch (error: any) {
+        if (error.response) {
+            throw new BaseError(
+                error.response.data?.detail || 'Erreur lors de l\'extraction du texte',
+                error.response.status
+            );
+        }
+        throw new BaseError('Service IA indisponible', 503);
+    }
+};
+

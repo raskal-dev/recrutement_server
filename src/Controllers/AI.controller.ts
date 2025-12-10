@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { SendError, SendResponse } from '../Middlewares/SendResponse.middleware';
 import { BaseError } from '../Utils/BaseErrer';
-import { chatWithAI, analyzeCV, generateJobDescription } from '../Services/AIServices';
+import { chatWithAI, analyzeCV, generateJobDescription, extractTextFromFile } from '../Services/AIServices';
 
 export const chatController = async (req: Request, res: Response) => {
     try {
@@ -65,6 +65,22 @@ export const generateJobDescriptionController = async (req: Request, res: Respon
             return SendError(res, err.message, err.statusCode);
         }
         return SendError(res, err.message || 'Erreur lors de la génération de la description', 500);
+    }
+};
+
+export const extractTextController = async (req: Request, res: Response) => {
+    try {
+        if (!req.file) {
+            return SendError(res, 'Aucun fichier fourni', 400);
+        }
+
+        const result = await extractTextFromFile(req.file);
+        SendResponse(res, result, 'Texte extrait avec succès');
+    } catch (err: any) {
+        if (err instanceof BaseError) {
+            return SendError(res, err.message, err.statusCode);
+        }
+        return SendError(res, err.message || 'Erreur lors de l\'extraction du texte', 500);
     }
 };
 
