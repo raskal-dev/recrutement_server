@@ -4,7 +4,7 @@ import { jwtMiddleware } from '../Middlewares/jwtMiddleware';
 import { Role } from '../Utils/Enums/Role.enum';
 
 const competenceRouter = express.Router();
-const role = [Role.STUDENT];
+const anyUser = [Role.STUDENT, Role.ENTREPRISE, Role.ADMIN];
 
 /**
  * @swagger
@@ -33,6 +33,6 @@ const role = [Role.STUDENT];
  *                         type: string
  *                         example: "React"
  */
-competenceRouter.get('/', jwtMiddleware(role), getCompetencesController);
+competenceRouter.get('/', jwtMiddleware(anyUser), getCompetencesController);
 
 export default competenceRouter;
