@@ -5,7 +5,8 @@ import { Role } from '../Utils/Enums/Role.enum';
 
 
 const userRouter = express.Router();
-const role = [Role.STUDENT];
+// Autoriser tous les utilisateurs connectés (étudiant, entreprise, admin)
+const anyUser = [Role.STUDENT, Role.ENTREPRISE, Role.ADMIN];
 
 /**
  * @swagger
@@ -28,7 +29,7 @@ const role = [Role.STUDENT];
  *                   items:
  *                     $ref: '#/components/schemas/User'
  */
-userRouter.get('/', jwtMiddleware(role), getUsersController);
+userRouter.get('/', jwtMiddleware(anyUser), getUsersController);
 
 /**
  * @swagger
@@ -49,7 +50,7 @@ userRouter.get('/', jwtMiddleware(role), getUsersController);
  *                 data:
  *                   $ref: '#/components/schemas/User'
  */
-userRouter.get('/profile', jwtMiddleware(role), getProfileController);
+userRouter.get('/profile', jwtMiddleware(anyUser), getProfileController);
 
 /**
  * @swagger
@@ -73,7 +74,7 @@ userRouter.get('/profile', jwtMiddleware(role), getProfileController);
  *       404:
  *         description: Utilisateur non trouvé
  */
-userRouter.get('/:userId', jwtMiddleware(role), getUserController);
+userRouter.get('/:userId', jwtMiddleware(anyUser), getUserController);
 
 /**
  * @swagger
@@ -159,7 +160,7 @@ userRouter.post('/', createUserController);
  *       404:
  *         description: Utilisateur non trouvé
  */
-userRouter.put('/:userId', jwtMiddleware(role), updateUserController);
+userRouter.put('/:userId', jwtMiddleware(anyUser), updateUserController);
 
 /**
  * @swagger
@@ -182,7 +183,7 @@ userRouter.put('/:userId', jwtMiddleware(role), updateUserController);
  *       404:
  *         description: Utilisateur non trouvé
  */
-userRouter.delete('/:userId', jwtMiddleware(role), deleteUserController);
+userRouter.delete('/:userId', jwtMiddleware(anyUser), deleteUserController);
 
 /**
  * @swagger
@@ -257,6 +258,6 @@ userRouter.post('/login', loginController);
  *       400:
  *         description: Données invalides
  */
-userRouter.post('/competences', jwtMiddleware(role), addCompetenceToUserController);
+userRouter.post('/competences', jwtMiddleware(anyUser), addCompetenceToUserController);
 
 export default userRouter;

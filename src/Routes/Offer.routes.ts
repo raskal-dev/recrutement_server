@@ -6,6 +6,8 @@ import { Role } from "../Utils/Enums/Role.enum";
 const offerRouter = express.Router();
 const roleEntreprise = [Role.ENTREPRISE];
 const roleStudent = [Role.STUDENT];
+const roleAdmin = [Role.ADMIN];
+const roleAnyUser = [Role.STUDENT, Role.ENTREPRISE, Role.ADMIN];
 
 /**
  * @swagger
@@ -28,7 +30,7 @@ const roleStudent = [Role.STUDENT];
  *                   items:
  *                     $ref: '#/components/schemas/Offer'
  */
-offerRouter.get("/", jwtMiddleware(roleStudent), getOffersController);
+offerRouter.get("/", jwtMiddleware(roleAnyUser), getOffersController);
 
 /**
  * @swagger
