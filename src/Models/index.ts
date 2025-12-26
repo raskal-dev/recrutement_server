@@ -4,9 +4,11 @@ import UserImport from "./User";
 import Offer from "./Offer";
 import Competence from "./Competence";
 import UserCompetence from "./UserCompetence";
+import OfferCompetence from "./OfferCompetence";
 import moment from "moment";
 import baselogger from "../Configs/Logger.config";
 import Experience from "./Experience";
+import Application from "./Application";
 // import CompetencesSeeder from "../Seeders/CompetencesSeeder";
 
 
@@ -36,17 +38,25 @@ db.users = UserImport(sequelize);
 db.offers = Offer(sequelize);
 db.competences = Competence(sequelize)
 db.userCompetences = UserCompetence(sequelize);
+db.offerCompetences = OfferCompetence(sequelize);
 db.experiences = Experience(sequelize);
+db.applications = Application(sequelize);
 
 /**
  * Define the R E L A T I O N S H I P S
  */
 db.users.hasMany(db.offers);
 db.offers.belongsTo(db.users);
-db.users.belongsToMany(db.competences, { through: 'UserCompetences' });
-db.competences.belongsToMany(db.users, { through: 'UserCompetences' });
+db.users.belongsToMany(db.competences, { through: 'usercompetences' });
+db.competences.belongsToMany(db.users, { through: 'usercompetences' });
+db.offers.belongsToMany(db.competences, { through: 'offercompetences' });
+db.competences.belongsToMany(db.offers, { through: 'offercompetences' });
 db.users.hasMany(db.experiences);
 db.experiences.belongsTo(db.users);
+db.users.hasMany(db.applications);
+db.applications.belongsTo(db.users);
+db.offers.hasMany(db.applications);
+db.applications.belongsTo(db.offers);
 
 const ConnectionDb = async () => {
   const formattedTime = moment().format('HH:mm:ss');

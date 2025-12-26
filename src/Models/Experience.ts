@@ -4,6 +4,11 @@ const Experience = (sequelize: Sequelize) => {
     return sequelize.define(
         'Experience',
         {
+            id: {
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
+                primaryKey: true,
+            },
             title: {
                 type: DataTypes.STRING(200),
                 allowNull: false,
@@ -19,9 +24,18 @@ const Experience = (sequelize: Sequelize) => {
             endDate: {
                 type: DataTypes.DATE,
                 allowNull: false,
+            },
+            UserId: {
+                type: DataTypes.UUID,
+                allowNull: false,
+                references: {
+                    model: 'users',
+                    key: 'id',
+                },
             }
         }, {
             timestamps: true,
+            tableName: 'experiences',
         }
     );
 }

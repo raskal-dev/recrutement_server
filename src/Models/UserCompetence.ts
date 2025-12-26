@@ -5,24 +5,25 @@ const UserCompetence = (sequelize: Sequelize) => {
         'UserCompetence',
         {
             userId: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.UUID,
                 allowNull: false,
                 references: {
-                    model: 'Users',
+                    model: 'users',
                     key: 'id'
                 }
             },
             competenceId: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.UUID,
                 allowNull: false,
                 references: {
-                    model: 'Competences',
+                    model: 'competences',
                     key: 'id'
                 }
             }
         }, 
         {
             timestamps: true,
+            tableName: 'usercompetences',
         }
     );
 };

@@ -1,11 +1,21 @@
 import { Request, Response } from "express";
-import { createOffer, deleteOffer, getOffers, getOffer, updateOffer } from "../Services/OfferServices";
+import { createOffer, deleteOffer, getOffers, getOffer, updateOffer, getOffersByUser } from "../Services/OfferServices";
 import { IOffer } from "../Utils/Interface/IOffer";
 import { SendError, SendResponse } from "../Middlewares/SendResponse.middleware";
 import { BaseError } from "../Utils/BaseErrer";
 
 export const getOffersController = async (req: Request, res: Response) => {
     try {
+        // @ts-expect-error Property 'auth' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        const user = req.auth?.user;
+        
+        // Si l'utilisateur est un recruteur, retourner seulement ses offres
+        if (user && user.role === 'entreprise') {
+            const offers = await getOffersByUser(user.id);
+            return SendResponse(res, offers, "Liste de vos offres");
+        }
+        
+        // Sinon, retourner toutes les offres (pour les étudiants)
         const offers = await getOffers();
         SendResponse(res, offers, "Liste des offres");
     } catch (err: any) {
@@ -19,8 +29,9 @@ export const getOffersController = async (req: Request, res: Response) => {
 
 export const getOfferController = async (req: Request, res: Response) => {
     try {
-        const offerId = parseInt(req.params.offerId);
-        if (isNaN(offerId)) {
+        const offerId = req.params.offerId;
+
+        if (!offerId) {
             return SendError(res, "ID invalide", 400);
         }
 
@@ -38,7 +49,7 @@ export const getOfferController = async (req: Request, res: Response) => {
 export const createOfferController = async (req: Request, res: Response) => {
     try {
         // @ts-expect-error Property 'auth' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
-        const user = await req.auth.user;
+        const user = req.auth.user;
 
         if (!user) {
             return SendError(res, "Utilisateur non trouvé", 404);
@@ -49,8 +60,9 @@ export const createOfferController = async (req: Request, res: Response) => {
         // }
 
         const dataOffer: IOffer = {...req.body, UserId: user.id};
+        const competenceIds = req.body.competenceIds || [];
 
-        const offer = await createOffer(dataOffer);
+        const offer = await createOffer(dataOffer, competenceIds);
         SendResponse(res, offer, "Offre ajouté avec succes!");
     } catch (err: any) {
         if (err instanceof BaseError) {
@@ -63,8 +75,8 @@ export const createOfferController = async (req: Request, res: Response) => {
 
 export const updateOfferController = async (req: Request, res: Response) => {
     try {
-        const offerId = parseInt(req.params.offerId);
-        if (isNaN(offerId)) {
+        const offerId = req.params.offerId;
+        if (!offerId) {
             return SendError(res, "ID invalide", 400);
         }
 
@@ -85,8 +97,8 @@ export const updateOfferController = async (req: Request, res: Response) => {
 
 export const deleteOfferController = async (req: Request, res: Response) => {
     try {
-        const offerId = parseInt(req.params.offerId);
-        if (isNaN(offerId)) {
+        const offerId = req.params.offerId;
+        if (!offerId) {
             return SendError(res, "ID invalide", 400);
         }
 

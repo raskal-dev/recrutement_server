@@ -22,7 +22,8 @@ export const jwtMiddleware = ( roles: Role[] ) => {
             if (!user) {
                 return SendError(res, 'Utilisateur non trouvé', 404);
             }
-            if (!roles.includes(user.role)) {
+            // L'admin a accès à toutes les routes
+            if (user.role !== Role.ADMIN && !roles.includes(user.role)) {
                 return SendError(res, 'Vous n\'êtes pas autorisé à effectuer cette action.', 403);
             }
             // @ts-expect-error Property 'auth' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
@@ -32,7 +33,14 @@ export const jwtMiddleware = ( roles: Role[] ) => {
             };
             return next();
         } catch (error: any) {
-            return SendError(res, error.message, 401);
+            // Token expiré ou invalide
+            if (error.name === 'TokenExpiredError') {
+                return SendError(res, 'Token expiré. Veuillez vous reconnecter.', 401);
+            }
+            if (error.name === 'JsonWebTokenError') {
+                return SendError(res, 'Token invalide. Veuillez vous reconnecter.', 401);
+            }
+            return SendError(res, error.message || 'Erreur d\'authentification', 401);
         }
     }
 };

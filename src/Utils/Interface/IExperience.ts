@@ -1,9 +1,10 @@
 export interface IExperience {
-    id?: number;
+    id?: string;
     title: string;
     description: string;
-    startDate: Date;
-    endDate: Date;
-    createdAt: Date;
-    updatedAt: Date;
+    startDate: Date | string;
+    endDate: Date | string;
+    UserId?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 };

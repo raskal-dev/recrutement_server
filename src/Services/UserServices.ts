@@ -8,18 +8,27 @@ import logger from "../Configs/Logger.config";
 
 const User = db.users as any;
 const Competence = db.competences as any;
+const Experience = db.experiences as any;
 
-export const getProfile = async (id: number) => {
+export const getProfile = async (id: string) => {
     return await User.findByPk(id, {
         attributes: ['id', 'name', 'email', 'about', 'adress', 'role', 'createdAt', 'updatedAt'],
-        include: {
-            model: Competence,
-            attributes: ['id', 'name']
-        }
+        include: [
+            {
+                model: Competence,
+                attributes: ['id', 'name'],
+                through: { attributes: [] }
+            },
+            {
+                model: Experience,
+                attributes: ['id', 'title', 'description', 'startDate', 'endDate', 'createdAt', 'updatedAt'],
+                order: [['startDate', 'DESC']]
+            }
+        ]
     });
 };
 
-export const addCompetenceToUser = async (userId: number, competenceIds: number[]) => {
+export const addCompetenceToUser = async (userId: string, competenceIds: string[]) => {
     const user = await User.findByPk(userId);
     if (!user) {
         throw new BaseError("Utilisateur non trouvé", 404);
@@ -40,7 +49,7 @@ export const getUsers = async () => {
     return await User.findAll({attributes: ['id', 'name','email', 'about', 'adress', 'role', 'createdAt', 'updatedAt']});
 };
 
-export const getUser = async (id: number) => {
+export const getUser = async (id: string) => {
     const existingUser = await User.findByPk(id);
     if (!existingUser) {
         throw new BaseError("Utilisateur non trouvé", 404);
@@ -52,23 +61,39 @@ export const getUser = async (id: number) => {
 };
 
 export const createUser = async (user: IUser) => {
-    return await User.create(user);
+    const newUser = await User.create(user);
+    // Retourner l'utilisateur sans le mot de passe
+    return await User.findByPk(newUser.id, {
+        attributes: ['id', 'name', 'email', 'about', 'adress', 'role', 'createdAt', 'updatedAt']
+    });
 };
 
-export const updateUser = async (id: number, user: IUser) => {
+export const updateUser = async (id: string, user: Partial<IUser>) => {
     const existingUser = await User.findByPk(id);
     if (!existingUser) {
         throw new BaseError("Utilisateur non trouvé", 404);
     }
 
-    await User.update(user, { where: { id } });
+    // Préparer les données à mettre à jour (le mot de passe est déjà hashé dans le contrôleur si présent)
+    const updateData: any = {};
+    
+    if (user.name !== undefined) updateData.name = user.name;
+    if (user.email !== undefined) updateData.email = user.email;
+    if (user.about !== undefined) updateData.about = user.about;
+    if (user.adress !== undefined) updateData.adress = user.adress;
+    if (user.role !== undefined) updateData.role = user.role;
+    // Le mot de passe est géré séparément dans le contrôleur (déjà hashé)
+    if ((user as any).password !== undefined) updateData.password = (user as any).password;
+    
+    await User.update(updateData, { where: { id } });
 
+    // Retourner l'utilisateur mis à jour sans le mot de passe
     return await User.findByPk(id, {
-        attributes: ['id', 'name', 'email', 'about', 'adress', 'createdAt', 'updatedAt']
+        attributes: ['id', 'name', 'email', 'about', 'adress', 'role', 'createdAt', 'updatedAt']
     });
 };
 
-export const deleteUser = async (id: number) => {
+export const deleteUser = async (id: string) => {
     const existingUser = await User.findByPk(id);
     if (!existingUser) {
         throw new BaseError("Utilisateur non trouvé", 404);
@@ -97,12 +122,17 @@ export const login = async (req: Request) => {
     }
 
     const token = jwt.sign(
-        { userEmail: user.email },
+        { userEmail: user.email, userId: user.id },
         process.env.JWT_KEY as string,
-        { expiresIn: 60 * 60 } // 60 secondes
+        { expiresIn: 60 * 60 } // 1 heure
     );
 
+    // Exclure le mot de passe de la réponse
+    const userWithoutPassword = await User.findByPk(user.id, {
+        attributes: ['id', 'name', 'email', 'about', 'adress', 'role', 'createdAt', 'updatedAt']
+    });
+
     logger.info(`User ${user.email} logged in`);
-    return { user, token };
+    return { user: userWithoutPassword, token };
 };
 

@@ -26,7 +26,7 @@ export const getProfileController = async(req: Request, res: Response, next: Nex
 
 export const addCompetenceToUserController = async(req: Request, res: Response, next: NextFunction) => {
     try {
-        const competenceIds = req.body.competenceIds as number[];
+        const competenceIds = req.body.competenceIds as string[];
 
         // @ts-expect-error Property 'auth' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
         const userId = await req.auth.user.id;
@@ -61,10 +61,7 @@ export const getUsersController = async(req: Request, res: Response, next: NextF
 
 export const getUserController = async(req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = parseInt(req.params.userId);
-        if (isNaN(userId)) {
-            return SendError(res, "ID invalide", 400);
-        }
+        const userId = req.params.userId;
 
         const user = await getUser(userId);
         SendResponse(res, user, "Utilisateur trouvé");
@@ -94,10 +91,7 @@ export const createUserController = async(req: Request, res: Response, next: Nex
 
 export const updateUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = parseInt(req.params.userId); // Extraire l'ID depuis l'URL
-        if (isNaN(userId)) {
-            return SendError(res, "ID invalide", 400);
-        }
+        const userId = req.params.userId; // UUID depuis l'URL
 
         if (req.body.password) {
             req.body.password = await bcrypt.hash(req.body.password, 10);
@@ -116,10 +110,7 @@ export const updateUserController = async (req: Request, res: Response, next: Ne
 
 export const deleteUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = parseInt(req.params.userId);
-        if (isNaN(userId)) {
-            return SendError(res, "ID invalide", 400);
-        }
+        const userId = req.params.userId;
 
         const result = await deleteUser(userId);
         SendResponse(res, result, "Suppression de l'utilisateur réussie");
@@ -135,7 +126,11 @@ export const deleteUserController = async (req: Request, res: Response, next: Ne
 export const loginController = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await login(req);
-        SendResponse(res, result, "Connexion réussie");
+        // Structure de réponse sécurisée : seulement les données nécessaires
+        SendResponse(res, {
+            user: result.user,
+            token: result.token
+        }, "Connexion réussie");
     } catch (err: any) {
         if (err instanceof BaseError) {
             return SendError(res, err.message, err.statusCode);

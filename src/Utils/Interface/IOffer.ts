@@ -1,11 +1,11 @@
 export interface IOffer {
-    id?: number;
+    id?: string;
     title: string;
     description: string;
     salary: string;
     localisation: string;
     contract: string;
-    UserId: number;
-    createdAt: Date;
-    updatedAt: Date;
+    UserId: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 };
